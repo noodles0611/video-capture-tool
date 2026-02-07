@@ -39,40 +39,43 @@ def process_video(file, tmpdirname, output_base):
     model = whisper.load_model("base")
     result = model.transcribe(audio_path)
     segments = result['segments']
-    
-    # 4. 给每张图加底部旁白（使用思源黑体）
-    font_path = "NotoSansSC-Regular.ttf"
-    
-    for fname in sorted(os.listdir(folder)):
-        if fname.endswith('.png'):
-            frame_num = int(fname.split('_')[1].split('.')[0])
-            t = frame_num - 1
-            text = ''
-            for seg in segments:
-                if seg['start'] <= t < seg['end']:
-                    text += seg['text'].strip() + ' '
-            
-            if text:
-                img_path = os.path.join(folder, fname)
-                im = Image.open(img_path)
-                draw = ImageDraw.Draw(im)
-                
-                try:
-                    font = ImageFont.truetype(font_path, size=28)
-                except Exception:
-                    font = ImageFont.load_default(size=24)
-                
-                bbox = draw.textbbox((0, 0), text.strip(), font=font)
-                text_w = bbox[2] - bbox[0]
-                text_h = bbox[3] - bbox[1]
-                x = (im.width - text_w) // 2
-                y = im.height - text_h - 20
-                
-                draw.rectangle((x-15, y-10, x+text_w+15, y+text_h+10), fill=(0, 0, 0, 180))
-                draw.text((x, y), text.strip(), font=font, fill="white")
-                
-                im.save(img_path)
-    
+
+    # 4. 给每张图加底部旁白（使用仓库里的.ttf字体 + 调试输出）
+                font_path = "NotoSansSC-VariableFont_wght.ttf"  
+
+                for fname in sorted(os.listdir(folder)):
+                    if fname.endswith('.png'):
+                        frame_num = int(fname.split('_')[1].split('.')[0])
+                        t = frame_num - 1
+                        text = ''
+                        for seg in segments:
+                            if seg['start'] <= t < seg['end']:
+                                text += seg['text'].strip() + ' '
+                        
+                        if text:
+                            img_path = os.path.join(folder, fname)
+                            im = Image.open(img_path)
+                            draw = ImageDraw.Draw(im)
+                            
+                            font = ImageFont.load_default(size=28)  # 默认 fallback 字体
+                            
+                            try:
+                                font = ImageFont.truetype(font_path, size=32)  # 尝试加载你的.ttf
+                                st.write(f"✅ 自定义中文字体加载成功！ - {fname}")  # 成功提示
+                            except Exception as e:
+                                st.write(f"❌ 字体加载失败: {str(e)} - 使用默认字体 - {fname}")  # 失败显示错误原因
+                            
+                            bbox = draw.textbbox((0, 0), text.strip(), font=font)
+                            text_w = bbox[2] - bbox[0]
+                            text_h = bbox[3] - bbox[1]
+                            x = (im.width - text_w) // 2
+                            y = im.height - text_h - 30  # 往下移一点，避免切边
+                            
+                            draw.rectangle((x-20, y-15, x+text_w+20, y+text_h+15), fill=(0, 0, 0, 200))
+                            draw.text((x, y), text.strip(), font=font, fill="white")
+                            
+                            im.save(img_path)
+  
     if os.path.exists(audio_path):
         os.remove(audio_path)
     
