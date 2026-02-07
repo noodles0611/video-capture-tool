@@ -1,0 +1,5 @@
+streamlit
+ffmpeg-python
+pillow
+zipfile36
+openai-whisper
