@@ -41,7 +41,7 @@ def process_video(file, tmpdirname, output_base):
     segments = result['segments']
     
     # 4. 给每张图加底部旁白（使用思源黑体）
-    font_path = "/usr/share/fonts/truetype/noto/NotoSansSC-Regular.ttf"
+    font_path = "NotoSansSC-Regular.ttf"
     
     for fname in sorted(os.listdir(folder)):
         if fname.endswith('.png'):
