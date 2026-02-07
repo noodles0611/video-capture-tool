@@ -10,6 +10,7 @@ WORKDIR /app
 
 # 先复制 requirements.txt 安装依赖（用国内清华源加速 pip，东京 IP 也能快点）
 COPY requirements.txt .
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 复制所有项目文件
