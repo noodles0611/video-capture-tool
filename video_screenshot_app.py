@@ -39,8 +39,12 @@ def process_video(file, tmpdirname, output_base):
                    check=True, capture_output=True)
     
     # 3. Whisper 转录
-    model = whisper.load_model("base")
-    result = model.transcribe(audio_path)
+    model = whisper.load_model("medium")
+    result = model.transcribe(
+    audio_path,
+    language="zh",                  # 明确指定中文
+    initial_prompt="以下是普通话的句子，使用简体中文输出。"
+)
     segments = result['segments']
     
     # 4. 尝试加载中文字体（只加载一次）
