@@ -71,7 +71,7 @@ if uploaded_files:
                             draw.rectangle((x-10, y-8, x+text_w+10, y+text_h+8), fill=(0,0,0,180))
                             draw.text((x, y), text.strip(), font=font, fill="white")
                             im.save(img_path)
-                
+
                 os.remove(audio_path)
                 return f"✅ 处理完成：{file.name}"
             
