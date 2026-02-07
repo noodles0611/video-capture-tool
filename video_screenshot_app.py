@@ -39,7 +39,7 @@ def process_video(file, tmpdirname, output_base):
                    check=True, capture_output=True)
     
     # 3. Whisper 转录
-    model = whisper.load_model("medium")
+    model = whisper.load_model("small")
     result = model.transcribe(
     audio_path,
     language="zh",                  # 明确指定中文
